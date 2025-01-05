@@ -1,0 +1,22 @@
+.judges-container {
+    display: flex;
+    justify-content: center; /* Center flex items horizontally */
+    flex-wrap: wrap; /* Allow flex items to wrap onto new lines */
+}
+
+.judge-wrapper {
+    margin: 0 50px;
+    text-align: center;
+}
+
+.judge-name {
+    margin-bottom: -150px; /* Adjust margin-bottom as needed */
+}
+
+.underlined-heading {
+    display: inline-block;
+    border-bottom: 3px solid black; /* Adjust thickness as needed */
+    padding-bottom: 5px; /* Adjust the length of the underline */
+    padding-left: 30px;
+    padding-right: 30px;
+}

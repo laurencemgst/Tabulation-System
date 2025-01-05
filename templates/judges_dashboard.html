@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Judges Dashboard</title>
+    
+    <!-- for bootstrap -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='Styles/Libraries/bootstrap.min.css') }}">
+    <script src="{{ url_for('static', filename='js/Libraries/jquery-3.5.1.slim.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/Libraries/popper.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/Libraries/bootstrap.min.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/Libraries/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/Libraries/socket.io.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Styles/judges_dashboard_styles.css') }}">
+
+</head>
+<body>
+    <div class="container">
+        <center> <img src="{{ url_for('static', filename='Images/bb.PNG') }}" style="width: 150px;"> </center>
+        <h5><center>Welcome, {{ name }}!</center></h5>
+        <hr>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% for category, message in messages %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+              <strong>{{ category }}</strong>: {{ message }}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <script>
+              // Automatically close the alert message after 10 seconds
+              setTimeout(function() {
+                var alert = document.querySelector('.alert');
+                if (alert) {
+                  alert.remove();
+                }
+              }, 10000); // 10 seconds in milliseconds
+            </script>
+          {% endfor %}
+        {% endwith %}
+
+        <div class="WaitSegment">
+            <br>
+            <br>
+            <div class="loaderCenter">
+                <div class="loader"></div>
+            </div>
+            <h3 class="segmentWait"><center> Wait for the next Segment! </center></h3>
+        </div>
+
+        <div id="segment1" style="display:none;">
+            {% include 'segments/segment1.html' %}
+        </div>
+
+        <div id="segment2" style="display:none;">
+            {% include 'segments/segment2.html' %}
+        </div>
+
+        <div id="segment3" style="display:none;">
+            {% include 'segments/segment3.html' %}
+        </div>
+
+        <div id="segment4" style="display:none;">
+            {% include 'segments/segment4.html' %}
+        </div>
+
+        <div id="segment5" style="display:none;">
+            {% include 'segments/segment5.html' %}
+        </div>
+
+    </div>
+
+    <div id="confirmationModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>Are you sure you want to submit?</p>
+        <button id="confirmBtn" class="greenBtn">Yes</button>
+        <button id="cancelBtn" class="redBtn">Cancel</button>
+      </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            var socket = io();
+
+            function hideLoader() {
+                $('.WaitSegment').hide();
+            }
+            function showLoader() {
+                $('.WaitSegment').show();
+            }
+
+            // Listen for admin actions
+            socket.on('user_action1', function(action) {
+                var div = document.getElementById('segment1');
+                if (action === 'show') {
+                    div.style.display = 'block';
+                    hideLoader();
+                } else if (action === 'hide') {
+                    div.style.display = 'none';
+                    showLoader();
+                }
+            });
+
+            socket.on('user_action2', function(action) {
+                var div = document.getElementById('segment2');
+                if (action === 'show') {
+                    div.style.display = 'block';
+                    hideLoader();
+                } else if (action === 'hide') {
+                    div.style.display = 'none';
+                    showLoader();
+                }
+            });
+
+            socket.on('user_action3', function(action) {
+                var div = document.getElementById('segment3');
+                if (action === 'show') {
+                    div.style.display = 'block';
+                    hideLoader();
+                } else if (action === 'hide') {
+                    div.style.display = 'none';
+                    showLoader();
+                }
+            });
+
+            socket.on('user_action4', function(action) {
+                var div = document.getElementById('segment4');
+                if (action === 'show') {
+                    div.style.display = 'block';
+                    hideLoader();
+                } else if (action === 'hide') {
+                    div.style.display = 'none';
+                    showLoader();
+                }
+            });
+
+            socket.on('user_action5', function(action) {
+                var div = document.getElementById('segment5');
+                if (action === 'show') {
+                    div.style.display = 'block';
+                    hideLoader();
+                } else if (action === 'hide') {
+                    div.style.display = 'none';
+                    showLoader();
+                }
+            });
+        });
+    </script>
+    <script src="{{ url_for('static', filename='js/judges_dashboard_js.js') }}"></script>
+    
+</body>
+</html>

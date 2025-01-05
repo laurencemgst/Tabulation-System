@@ -1,0 +1,40 @@
+        <div class="contestants">
+            <br>
+            <h2><center> Binibining Top 5 </center></h2>
+            <hr>
+            <form id="contestantForm5" action="/submit" method="post"> <!-- The form numver of the final_segment number -->
+                <input type="hidden" name="segment_id" value="5"> <!-- The segment_id of the final_segment -->
+                {% for candidate in final_candidates %}
+                <div class="individual_contestants">
+                    <input type="hidden" name="candidate_id" value="{{ candidate[0] }}">
+                    <input type="hidden" name="judge_id" value="{{ userID }}">
+                    <img src="{{ url_for('static', filename='Images/Candidates/' + candidate[1] + '.jpg') }}" width="200" height="250">
+                    <div class="contestant_info">
+                        <h3 class="candidate_number_and_name">#{{ candidate[0] }} - {{ candidate[1] }}</h3>
+                        <p class="CandidateRepresents">{{ candidate[2] }}</p>
+                        <div class="slidecontainer">
+                            <label for="myRange1" style="width: 250px;">Beauty (40%):</label>
+                            <input type="range" min="1" max="40" value="20" class="slider" id="myRange1" name="criteria1">
+                            <input type="number" min="1" max="40" value="20" id="rangeValue1" name="criteria1_value_{{ candidate[0] }}">
+                        </div>
+                        <div class="slidecontainer">
+                            <label for="myRange2" style="width: 250px;">Intelligence (50%):</label>
+                            <input type="range" min="1" max="50" value="25" class="slider" id="myRange2" name="criteria2">
+                            <input type="number" min="1" max="50" value="25" id="rangeValue2" name="criteria2_value_{{ candidate[0] }}">
+                        </div>
+                        <div class="slidecontainer">
+                            <label for="myRange3" style="width: 250px;">Delivery and Confidence (10%):</label>
+                            <input type="range" min="1" max="10" value="5" class="slider" id="myRange3" name="criteria3">
+                            <input type="number" min="1" max="10" value="5" id="rangeValue3" name="criteria3_value_{{ candidate[0] }}">
+                        </div>
+                        <div class="slidecontainer">
+                            <input type="hidden" min="1" max="25" value="0" class="slider" id="myRange4" name="criteria4">
+                            <input type="hidden" min="1" max="25" value="0" id="rangeValue4" name="criteria4_value_{{ candidate[0] }}">
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                <!-- Include other form elements or buttons as needed -->
+                <button class="submit-btn" type="submit" onclick="return submitForm('contestantForm5')">Submit</button> <!-- The form numver of the final_segment number -->
+            </form>
+        </div>

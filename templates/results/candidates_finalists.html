@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidates Finalists</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Styles/result_admin_dashboard.css') }}">
+</head>
+<body>
+    <center>
+    <img src="{{ url_for('static', filename='Images/Header.PNG') }}" style="width: 500px;">
+    <h1> Candidates Finalists  </h1>
+    <h1> TOP 5  </h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Candidate Number</th>
+                <th>Candidate Name</th>
+                <th>Candidate Represents</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i, candidate in finalists_candidates|enumerate(1) %}
+            <tr>
+                <td>{{ i }}</td>
+                <td>{{ candidate[0] }}</td>
+                <td>{{ candidate[1] }}</td>
+                <td>{{ candidate[2] }}</td>
+                <td>{{ '%.2f' % candidate[3] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </center>
+</body>
+</html>

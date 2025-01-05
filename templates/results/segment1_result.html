@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Segment 1 Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Styles/result_admin_dashboard.css') }}">
+</head>
+<body>
+    <center>
+        <img src="{{ url_for('static', filename='Images/Header.PNG') }}" style="width: 500px;">
+        <h3>PRODUCTION NUMBER RESULT</h3>
+    
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Candidate Number</th>
+                <th>Candidate Name</th>
+                {% for judge_id, judge_name in judges.items() %}
+                <th style="font-size: xx-small;">{{ judge_name }}</th>
+                {% endfor %}
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i, candidate in candidates|enumerate(1) %}
+            <tr>
+                <td>{{ i }}</td>
+                <td>{{ candidate[0] }}</td>
+                <td style="font-size: small;">{{ candidate[1] }}</td>
+                {% for score in candidate[2] %}
+                <td>{{ score }}</td>
+                {% endfor %}
+                <td>{{ '%.2f' % candidate[3] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </center>
+<div class="judges-container">
+    {% for judge_name, user_type in judge_info.items() %}
+    <div class="judge-wrapper">
+        <br>
+        <br>
+        <h4 class="judge-name underlined-heading" style="font-size: smaller;">{{ judge_name }}</h4>
+        <p style="font-size: xx-small;">{{ user_type }}</p>
+    </div>
+    {% endfor %}
+</div>
+
+</body>
+</html>

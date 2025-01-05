@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Thank you</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Styles/Libraries/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='Styles/admin_dashboard_styles.css') }}">
+    <script src="{{ url_for('static', filename='js/Libraries/Admin/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/Libraries/Admin/socket.io.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/Libraries/bootstrap.min.js') }}"></script>
+</head>
+
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          <strong>{{ category }}</strong>: {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <script>
+          // Automatically close the alert message after 10 seconds
+          setTimeout(function() {
+            var alert = document.querySelector('.alert');
+            if (alert) {
+              alert.remove();
+            }
+          }, 10000); // 10 seconds in milliseconds
+        </script>
+      {% endfor %}
+    {% endwith %}
+    <center>
+        <img src="{{ url_for('static', filename='Images/bb.PNG') }}" style="width: 300px;">
+        <h2>Thank you for judging this Event.</h2>
+    </center>
+</body>
+
+</html>

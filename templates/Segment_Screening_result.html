@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binibining Screening Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Styles/result_admin_dashboard.css') }}">
+</head>
+<body>
+    <h1> <center> Binibining Result </center> </h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Candidate Number</th>
+                <th>Candidate Name</th>
+                {% for judge_id, judge_name in judges.items() %}
+                <th>{{ judge_name }}</th>
+                {% endfor %}
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i, candidate in candidates|enumerate(1) %}
+            <tr>
+                <td>{{ i }}</td>
+                <td>{{ candidate[0] }}</td>
+                <td>{{ candidate[1] }}</td>
+                {% for score in candidate[2] %}
+                <td>{{ score }}</td>
+                {% endfor %}
+                <td>{{ '%.2f' % candidate[3] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+<div class="judges-container">
+    {% for judge_name, user_type in judge_info.items() %}
+    <div class="judge-wrapper">
+        <br>
+        <br>
+        <h4 class="judge-name underlined-heading">{{ judge_name }}</h4>
+        <p>{{ user_type }}</p>
+    </div>
+    {% endfor %}
+</div>
+
+</body>
+</html>

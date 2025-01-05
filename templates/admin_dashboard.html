@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Styles/Libraries/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='Styles/admin_dashboard_styles.css') }}">
+    <script src="{{ url_for('static', filename='js/Libraries/Admin/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/Libraries/Admin/socket.io.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/Libraries/bootstrap.min.js') }}"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Admin Dashboard!</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% for category, message in messages %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+              <strong>{{ category }}</strong>: {{ message }}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <script>
+              // Automatically close the alert message after 10 seconds
+              setTimeout(function() {
+                var alert = document.querySelector('.alert');
+                if (alert) {
+                  alert.remove();
+                }
+              }, 10000); // 10 seconds in milliseconds
+            </script>
+          {% endfor %}
+        {% endwith %}
+
+        <hr>
+        <h5 class="dropdown"><center> Segment Status </center></h5>
+        <div class="centeredDiv hiddenContent">
+            <div class="segmentStatus" style="display: inline-flex;">
+                <table border="1">
+                    <tr>
+                        <th>Segment Name</th>
+                        <th>Show Button</th>
+                        <th>Hide Button</th>
+                    </tr>
+                    <tr>
+                        <td>1 - Production Number</td>
+                        <td><button id="showButtonSegment1" onclick="return confirmShow()">Show Div</button></td>
+                        <td><button id="hideButtonSegment1" onclick="return confirmHide()">Hide Div</button></td>
+                    </tr>
+                    <tr>
+                        <td>2 - Swimsuit</td>
+                        <td><button id="showButtonSegment2" onclick="return confirmShow()">Show Div</button></td>
+                        <td><button id="hideButtonSegment2" onclick="return confirmHide()">Hide Div</button></td>
+                    </tr>
+                    <tr>
+                        <td>3 - Evening Gown</td>
+                        <td><button id="showButtonSegment3" onclick="return confirmShow()">Show Div</button></td>
+                        <td><button id="hideButtonSegment3" onclick="return confirmHide()">Hide Div</button></td>
+                    </tr>
+                    <tr>
+                        <td>4 - Preliminary Q&A</td>
+                        <td><button id="showButtonSegment4" onclick="return confirmShow()">Show Div</button></td>
+                        <td><button id="hideButtonSegment4" onclick="return confirmHide()">Hide Div</button></td>
+                    </tr>
+                    <tr>
+                        <td>Final - Top 5</td>
+                        <td><button id="showButtonSegment5" onclick="return confirmShow()">Show Div</button></td>
+                        <td><button id="hideButtonSegment5" onclick="return confirmHide()">Hide Div</button></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <hr>
+
+        <br>
+        <br>
+        <hr>
+        <h5 class="dropdown"><center> Segment Results </center></h5>
+        <div class="SegmentResult hiddenContent">
+            <a href="/result/segment=1"> Segment 1 Result </a>
+            <a href="/result/segment=2"> Segment 2 Result </a>
+            <a href="/result/segment=3"> Segment 3 Result </a>
+            <a href="/result/segment=4"> Segment 4 Result </a>
+        </div>
+        <hr>
+
+        <br>
+        <br>
+        <hr>
+        <h5 class="dropdown"><center> Final Segment Results </center></h5>
+        <div class="final_segment_result hiddenContent">
+                <a href="/compute_top_finalists"> Get Top Finalist </a>
+                <a href="/finalist_candidates"> Candidates Final Lists </a>
+                <a href="/result/segment=5"> Final Segment Result </a>
+        </div>
+        <hr>
+
+        <br>
+        <hr>
+        <h5 class="dropdown"><center> Candidates Profile </center></h5>
+        <div class="centeredDiv hiddenContent">
+            <table class="candidateTable" border="1">
+              <thead>
+                <tr>
+                  <th>Candidate Number</th>
+                  <th>Candidate Name</th>
+                  <th>Candidate Represent</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for candidate in candidates %}
+                  <tr>
+                    <form action="/updateCandidate" method="post">
+                    <td>{{ candidate[0] }}</td>
+                    <td><input type="text" name="candidate_name" value="{{ candidate[1] }}"></td>
+                    <td><input type="text" name="candidate_represent" value="{{ candidate[2] }}"></td>
+                    <td>
+                        <input type="hidden" name="candidate_number" value="{{ candidate[0] }}">
+                        <button type="submit" class="btn btn-primary" onclick="return confirmUpdate({{ candidate[0] }})">Update</button>
+                      </form>
+                      <form action="/deleteCandidate" method="post">
+                        <input type="hidden" name="candidate_number" value="{{ candidate[0] }}">
+                        <button type="submit" class="btn btn-danger" onclick="return confirmDelete({{ candidate[0] }})">Delete</button>
+                      </form>
+                    </td>
+                  </tr>
+                {% endfor %}
+                    <tr>
+                        <form action="/add_candidate" method="post">
+                        <td> <input type="number" name="candidate_number" value=""> </td>
+                        <td> <input type="text" name="candidate_name" value=""> </td>
+                        <td> <input type="text" name="candidate_represent" value=""> </td>
+                        <td>
+                            <button type="submit" class="btn btn-primary" onclick="return confirmAdd()">Add Candidate</button>
+                        </td>
+                        </form>
+                    </tr>
+              </tbody>
+            </table>
+        </div>
+        <hr>
+
+        <br>
+        <hr>
+        <h5 class="dropdown"><center> Judges Profile </center></h5>
+        <div class="centeredDiv hiddenContent">
+            <table class="judgesTable" border="1">
+              <thead>
+                <tr>
+                  <th>Judge ID</th>
+                  <th>Judge Name</th>
+                  <th>Judge Username</th>
+                  <th>Judge Password</th>
+                  <th>Judge Type</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for judge in judges %}
+                  <tr>
+                    <form action="/judgeUpdate" method="post">
+                    <td>{{ judge[0] }}</td>
+                    <td><input type="text" name="judge_name" value="{{ judge[1] }}"></td>
+                    <td><input type="text" name="judge_username" value="{{ judge[2] }}"></td>
+                    <td><input type="text" name="judge_password" value="{{ judge[3] }}"></td>
+                    <td><input type="text" name="judge_type" value="{{ judge[4] }}"></td>
+                    <td>
+                        <input type="hidden" name="judge_id" value="{{ judge[0] }}">
+                        <button type="submit" class="btn btn-primary" onclick="return confirmUpdateJudge({{ judge[0] }})">Update</button>
+                      </form>
+                      <form action="/judgeDelete" method="post">
+                        <input type="hidden" name="judge_id" value="{{ judge[0] }}">
+                        <input type="hidden" name="judge_name" value="{{ judge[1] }}">
+                        <button type="submit" class="btn btn-danger" onclick="return confirmDeleteJudge({{ judge[0] }})">Delete</button>
+                      </form>
+                    </td>
+                  </tr>
+                {% endfor %}
+                    <tr>
+                        <form action="/addJudge" method="post">
+                        <td> </td>
+                        <td> <input type="text" name="judge_name" value=""> </td>
+                        <td> <input type="text" name="judge_username" value=""> </td>
+                        <td> <input type="text" name="judge_password" value=""> </td>
+                        <td> <input type="text" name="judge_type" value=""> </td>
+                        <td>
+                            <button type="submit" class="btn btn-primary" onclick="return confirmAddJudge()">Add Judge</button>
+                        </td>
+                        </form>
+                    </tr>
+              </tbody>
+            </table>
+        </div>
+        <hr>
+
+
+        <br>
+        <hr>
+        <h5 class="dropdown"><center> Segments </center></h5>
+        <div class="centeredDiv hiddenContent">
+            <table class="segmentsTable" border="1">
+              <thead>
+                <tr>
+                  <th>Segment ID</th>
+                  <th>Segment Name</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for segment in segments %}
+                  <tr>
+                    <form action="/updateSegment" method="post">
+                    <td>{{ segment[0] }}</td>
+                    <td><input type="text" name="segment_name" value="{{ segment[1] }}"></td>
+                    <td>
+                        <input type="hidden" name="segment_id" value="{{ segment[0] }}">
+                        <button type="submit" class="btn btn-primary" onclick="return confirmUpdateSegment({{ segment[0] }})">Update</button>
+                      </form>
+                      <form action="/deleteSegment" method="post">
+                        <input type="hidden" name="segment_id" value="{{ segment[0] }}">
+                        <input type="hidden" name="segment_name" value="{{ segment[1] }}">
+                        <button type="submit" class="btn btn-danger" onclick="return confirmDeleteSegment({{ segment[0] }})">Delete</button>
+                      </form>
+                    </td>
+                  </tr>
+                {% endfor %}
+                    <tr>
+                        <form action="/addSegment" method="post">
+                        <td> <input type="number" name="segment_id" value=""> </td>
+                        <td> <input type="text" name="segment_name" value=""> </td>
+                        <td>
+                            <button type="submit" class="btn btn-primary" onclick="return confirmAddSegment()">Add Segment</button>
+                        </td>
+                        </form>
+                    </tr>
+              </tbody>
+            </table>
+        </div>
+        <hr>
+        
+        <a href="/logout">Logout</a>
+    </div>
+    
+    <script>
+        $(document).ready(function() {
+            var socket = io();
+
+            // Show button
+            $('#showButtonSegment1').click(function() {
+                socket.emit('admin_action1', 'show');
+            });
+
+            // Hide button
+            $('#hideButtonSegment1').click(function() {
+                socket.emit('admin_action1', 'hide');
+            });
+
+            $('#showButtonSegment2').click(function() {
+                socket.emit('admin_action2', 'show');
+            });
+
+            // Hide button
+            $('#hideButtonSegment2').click(function() {
+                socket.emit('admin_action2', 'hide');
+            });
+
+            // Show button
+            $('#showButtonSegment3').click(function() {
+                socket.emit('admin_action3', 'show');
+            });
+
+            // Hide button
+            $('#hideButtonSegment3').click(function() {
+                socket.emit('admin_action3', 'hide');
+            });
+
+            // Show button
+            $('#showButtonSegment4').click(function() {
+                socket.emit('admin_action4', 'show');
+            });
+
+            // Hide button
+            $('#hideButtonSegment4').click(function() {
+                socket.emit('admin_action4', 'hide');
+            });
+
+            // Show button
+            $('#showButtonSegment5').click(function() {
+                socket.emit('admin_action5', 'show');
+            });
+
+            // Hide button
+            $('#hideButtonSegment5').click(function() {
+                socket.emit('admin_action5', 'hide');
+            });
+        });
+
+        document.querySelectorAll('.dropdown').forEach(item => {
+          item.addEventListener('click', event => {
+            const content = item.nextElementSibling;
+            content.classList.toggle('hiddenContent');
+          });
+        });
+
+        function confirmUpdate(candidateId) {
+          return confirm("Are you sure you want to update this candidate?");
+        }
+
+        function confirmDelete(candidateId) {
+          return confirm("Are you sure you want to delete this candidate?");
+        }
+
+        function confirmUpdateJudge(judgeID) {
+          return confirm("Are you sure you want to update this Judge?");
+        }
+
+        function confirmDeleteJudge(judgeID) {
+          return confirm("Are you sure you want to delete this Judge?");
+        }
+
+        function confirmAddJudge() {
+            return confirm("Are you sure you want to add this new Judge?");
+        }
+
+        function confirmUpdateSegment(SegmentID) {
+          return confirm("Are you sure you want to update this Segment?");
+        }
+
+        function confirmDeleteSegment(SegmentID) {
+          return confirm("Are you sure you want to delete this Segment?");
+        }
+
+        function confirmAddSegment() {
+            return confirm("Are you sure you want to add this new Segment?");
+        }
+
+        function confirmAdd() {
+            return confirm("Are you sure you want to add this new candidate?");
+        }
+
+        function confirmShow() {
+          return confirm("Are you sure you want to show this segment?");
+        }
+
+        function confirmHide() {
+          return confirm("Are you sure you want to hide this segment?");
+        }
+
+    </script>
+</body>
+</html>

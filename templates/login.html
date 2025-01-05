@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Tabulation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Styles/login_styles.css') }}">
+</head>
+
+<body>
+    <section>
+        <div class="form-box">
+            <div class="form-value">
+                <img src="{{ url_for('static', filename='Images/Tabulation.png') }}" style="width: 250px; " class="center">
+                <center>
+                    <h6> Tabulation System </h6>
+                    <p> Binibining 2024 </p>
+                </center>
+                <br>
+                <button class="btn event"> Binibining 2024 </button>
+                <form action="/login" method="post">
+                    <div class="inputbox">
+                        <ion-icon name="mail-outline"></ion-icon>
+                        <input type="test" id="username" name="username" required>
+                        <label>Username</label>
+                    </div>
+                    <div class="inputbox">
+                        <ion-icon name="lock-closed-outline"></ion-icon>
+                        <input type="password" id="password" name="password" required>
+                        <label>Password</label>
+                    </div>
+                    <button class="btn login">Log In</button>
+                    <center>
+                    {% with messages = get_flashed_messages() %}
+                      {% for message in messages %}
+                        <h4 style="color: red;"> {{ message }} </h4>
+                      {% endfor %}
+                    {% endwith %}
+                    </center>
+                </form>
+            </div>
+        </div>
+    </section> 
+</body>
+
+</html>
